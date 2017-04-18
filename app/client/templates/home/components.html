@@ -3,6 +3,13 @@
   <span id="add_option" class="fui-plus-circle btn btn-success"></span>
 </template>
 
+<template name="datepicker">
+  <div class="input-group datetimepicker">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    <input id="due-date" class="set-due-date form-control" type="text"/>
+  </div>
+</template>
+
 <template name="timelimit">
   <select id="hour_limit" class="form-control select select-primary time_limit_input" data-toggle="select">
     {{#each hours}}
@@ -27,11 +34,8 @@
           </div>
           <h4 class="heading">{{this.poll.name}}</h4>
           <div class="description">
-            <div class="col-xs-12 vote_front">
-              <p class="title_poll_front">Votes</p>
-              <p>{{get_votes}}</p>
-            </div>
             <a href="{{pathFor route='vote'}}" class="fui-export btn btn-info open_vote_btn"> Vote</a>
+            <a href="{{pathFor route='register'}}" class="fui-export btn btn-info open_vote_btn"> Register</a>
           </div>
         </div>
       </div>

@@ -113,6 +113,7 @@ Template.vote.events({
            gas: 800000,
            gasPrice: gasprice
          }, function(e, contract){
+           console.log(e)
           if (typeof contract.address != 'undefined') {
             console.log('Contract mined! address: ' + contract.address);
             var blocknum = web3.eth.blockNumber;

@@ -7,6 +7,18 @@ Router.route('/polls', {
   template: 'all_polls'
 });
 
+Router.route('/register/:_id', {
+  name: 'register',
+  template: 'vote',
+  data: function() {
+    poll: {
+      //TODO: Instead of storing ID in Session, store the actual vote
+      var current_poll = poll.findOne({_id: this.params._id});
+      return current_poll;
+    }
+  }
+});
+
 Router.route('/vote/:_id', {
   name: 'vote',
   template: 'vote',

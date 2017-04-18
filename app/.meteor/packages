@@ -26,3 +26,4 @@ silentcicero:ethjs
 silentcicero:hooked-web3-provider@=0.0.3
 reactive-var
 check
+tsega:bootstrap3-datetimepicker

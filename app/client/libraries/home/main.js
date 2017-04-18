@@ -1,4 +1,4 @@
-Session.set('NumberOfOptions', 2);
+leSession.set('NumberOfOptions', 2);
 Meteor.subscribe('poll_listings');
 
 Template.timelimit.helpers({
@@ -12,7 +12,7 @@ Template.timelimit.helpers({
 
 Template.poll_listed.helpers({
   countpolls: function() {
-    return (poll.find({'poll.isvoted': false, 'poll.isactive':true}).count() > 0);
+    return (poll.find({'poll.isvoted': false, 'poll.isactive':false}).count() > 0);
   },
   six_polls: function() {
     var all_polls = poll.find({'poll.ready':true, "poll.isactive":true, "poll.public":true}, {sort: {createdAt: -1}}).fetch();
@@ -70,18 +70,30 @@ Template.more_options.events({
   }
 });
 
+Template.datepicker.rendered = function() {
+  // initialize datepicker
+  $('#datepicker').datepicker({
+    format: 'm, dd, yyyy'
+  });
+};
+
+Template.datepicker.events ({
+  'focus #datepicker': function () {
+    $('#datepicker').datepicker('show');
+    console.log('#datepicker has focus');
+  }
+});
+
 Template.main.events({
   'click #submit': function(event) {
+    console.log('Click')
     event.preventDefault();
     num_options = Session.get('NumberOfOptions');
     var poll = {
       'name': '',
       'description': '',
       'options':'',
-      'public':'',
-      'vote_limit':false,
       'isactive':false,
-      'isvoted':false,
       'ready':false
     }
 
@@ -94,14 +106,11 @@ Template.main.events({
     }
 
     poll['options'] = option;
-    poll['public'] = $('#public_poll_switch').is(":checked");
-    //poll['multi_option'] = $('#multi_option_switch').is(":checked");
-    poll['vote_limit'] = parseInt($('#vote_limit').val());
-    var hours = $('#hour_limit option:selected').text();
-    var days = $('#day_limit option:selected').text();
+    // var hours = $('#hour_limit option:selected').text();
+    /// var days = $('#day_limit option:selected').text();
 
-    poll['limit_hours'] = parseInt(hours.match(/\d+/)[0]);
-    poll['limit_days'] = parseInt(days.match(/\d+/)[0]);
+    /// poll['limit_hours'] = parseInt(hours.match(/\d+/)[0]);
+    // poll['limit_days'] = parseInt(days.match(/\d+/)[0]);
 
     Meteor.call('post_data', poll, function(error, success) {
       Router.go('vote', {_id: success});
