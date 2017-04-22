@@ -1,0 +1,106 @@
+<template name="auth">
+
+  <section id="login" class="poll_section">
+    <div name="poll_section" class="covering">
+      <div class="create_title">
+        <h1>Login</h1>
+      </div>
+      <div class="container-fluid table-class">
+        <div class="black">
+          <div class="inner cover">
+            <div class="centerUp">
+              <div class="questionaire">
+                <form>
+                  <ul>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Email</h1>
+                      </label>
+                      <input type="email" maxlength="48" class="form-control getName make_btn_appear" id="email" placeholder="Email"  required="required" />
+                    </li>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Password</h1>
+                      </label>
+                      <input type="password" maxlength="48" class="form-control getName make_btn_appear" id="password" placeholder="Password"  required="required" />
+                    </li>
+
+                  </ul>
+                </form>
+              </div>
+              <button id="submitLogin" class="btn btn-success btn-lg">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="register" class="poll_section">
+    <div name="poll_section" class="covering">
+      <div class="create_title">
+        <h1>Register</h1>
+      </div>
+      <div class="container-fluid table-class">
+        <div class="black">
+          <div class="inner cover">
+            <div class="centerUp">
+              <div class="questionaire">
+                <form>
+                  <ul>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Full name</h1>
+                      </label>
+                      <input type="text" maxlength="48" class="form-control getName make_btn_appear" id="full_name" placeholder="Full Name"  required="required" />
+                    </li>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Email</h1>
+                      </label>
+                      <input type="text" maxlength="48" class="form-control getName make_btn_appear" id="email" placeholder="Email"  required="required" />
+                    </li>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>CIN</h1>
+                      </label>
+                      <input type="text" maxlength="48" class="form-control getName make_btn_appear" id="cin" placeholder="CIN"  required="required" />
+                    </li>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Birthday</h1>
+                      </label>
+                      {{> datepicker}}
+                    </li>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Gouvernerat</h1>
+                      </label>
+                      <input type="text" maxlength="48" class="form-control getName make_btn_appear" id="gouvernerat" placeholder="Gouvernerat"  required="required" />
+                    </li>
+
+                    <li class="form-group animated fadeInRightBig activate" data-color="#E1523D" data-percentage="20%">
+                      <label for="nameInput">
+                        <h1>Password</h1>
+                      </label>
+                      <input type="password" maxlength="48" class="form-control getName make_btn_appear" id="password" placeholder="Password"  required="required" />
+                    </li>
+
+                  </ul>
+                </form>
+              </div>
+              <button id="submitRegister" class="btn btn-success btn-lg">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

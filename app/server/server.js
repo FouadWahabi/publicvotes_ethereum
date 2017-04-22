@@ -6,8 +6,24 @@ Meteor.publish('poll_listings', function() {
 });
 
 var accountstowatch = [];
+Auth = undefined;
 
 Meteor.startup(function() {
+
+  // Setup global Auth object, which holds various methods to manage
+  	// authentication. Parameters allow you to customize which collection and
+  	// fields should be managed. The first parameter is the server key which
+  	// is used to sign session tokens. Change it to some random value.
+  	Auth = makeAuthenticationManager("552ad4c6f2c87b5ef6c4d29614d95f57", {
+  		userCollection: Voters,
+  		usernameField: "email",
+  		passwordHashField: "password_hash",
+  		sessionCollection: VoterSessions,
+  		sessionLongevitySeconds: 7 * 24 * 60 * 60
+  	});
+
+    console.log(Auth.generatePasswordHash('test'))
+
   //process.env.HTTP_FORWARDED_COUNT = 1;
 
   function polldeadline(poll_input, _current_date) {
@@ -68,15 +84,42 @@ Meteor.startup(function() {
         poll.update({_id:current_poll._id}, {$set:{'poll.ready':true}});
       }
     }
-  }, 120000)
+  }, 60000)
 });
 
 Meteor.methods({
-  post_data: function(data) {
-    return poll.insert({ poll: data, createdAt: new Date() }, function(error, success) {
+  currentUser: function(sessionToken) {
+    console.log(sessionToken)
+    var user = Auth.getUserBySessionToken(sessionToken)
+    console.log(user)
+    return user
+  },
+  createVoter: function (name, email, password, cin, gouvernerat) {
+    return createVoter(name, email, password, cin, gouvernerat)
+  },
+  login: function (email, password) {
+		var sessionToken;
+
+    sessionToken = Auth.getSessionTokenForUsernamePassword(email, password);
+
+    if (!sessionToken) {
+      throw new Meteor.Error(401, "Invalid email and password combination.");
+    }
+
+    return sessionToken;
+	},
+  post_data: function(sessionToken, data) {
+    var owner = Auth.getUserBySessionToken(sessionToken)._id
+    return poll.insert({ poll: data, createdAt: new Date(), owner: owner}, function(error, success) {
       //TODO More rigorous error checking when failed to insert
       return success;
     });
+  },
+  register_voter: function(sessionToken, poll_id) {
+    console.log('Register voter')
+    var voter_id = Auth.getUserBySessionToken(sessionToken)._id
+    var idCred = Random.id()
+    return poll.update({_id:poll_id}, {$push: {voters: voter_id, idCreds: idCred}})
   },
   post_vote: function(poll_id, vote) {
     var current_poll = poll.findOne({_id:poll_id});

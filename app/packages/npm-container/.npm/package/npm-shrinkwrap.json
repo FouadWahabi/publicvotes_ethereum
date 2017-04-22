@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "bcrypt-nodejs": {
+      "version": "0.0.3"
+    }
+  }
+}

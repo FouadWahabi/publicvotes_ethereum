@@ -1,5 +1,26 @@
 Router.route('/', {
-  template: 'main'
+  template: 'main',
+  onBeforeAction: function() {
+    if(Session.get("token") === 'unknown') {
+        Router.go('auth')
+    }
+    this.next();
+  }
+});
+
+Router.route('/auth', {
+  name: 'auth',
+  template: 'auth',
+  data: function() {
+
+  },
+  onBeforeAction: function() {
+    if(Session.get("token") !== 'unknown') {
+      console.log(Session.get("token"))
+        Router.go('/')
+    }
+    this.next();
+  }
 });
 
 Router.route('/polls', {
@@ -14,25 +35,18 @@ Router.route('/vote/:_id', {
     poll: {
       //TODO: Instead of storing ID in Session, store the actual vote
       var current_poll = poll.findOne({_id: this.params._id});
-      return current_poll;
+      return current_poll
     }
   },
   onBeforeAction: function() {
     var vote_id = this.params._id;
     var current_poll = poll.findOne({_id: this.params._id});
-    if (current_poll) {
-      if (current_poll.poll.isvoted === true) {
-        var route = "/vote/" + vote_id + "/voted";
-        Router.go(route);
+    Meteor.call('currentUser', getSessionToken(), function(error, user) {
+      if(!error && user._id !== current_poll.owner) {
+        Router.go('/')
       }
+    })
 
-      Meteor.call('already_voted', vote_id, function(error, success) {
-        if(success) {
-          var route = "/vote/" + vote_id + "/voted";
-          Router.go(route);
-        }
-      });
-    }
     this.next();
   }
 });

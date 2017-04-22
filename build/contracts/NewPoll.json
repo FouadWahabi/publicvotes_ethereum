@@ -162,8 +162,46 @@
       "links": {},
       "address": "0x7066e55d8531b01e20d8be1138ef508f657a99f4",
       "updated_at": 1491638598570
+    },
+    "1492423485826": {
+      "events": {
+        "0x24bcf19562365f6510754002f8d7b818d275886315d29c7aa04785570b97a363": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "votechoice",
+              "type": "string"
+            }
+          ],
+          "name": "NewVote",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xce7c10411916bfe73c585f6e63db40e68f30e4a2",
+      "updated_at": 1492425319402
+    },
+    "1492468892675": {
+      "events": {
+        "0x24bcf19562365f6510754002f8d7b818d275886315d29c7aa04785570b97a363": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "votechoice",
+              "type": "string"
+            }
+          ],
+          "name": "NewVote",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xd4d0369c17f310e136298890f3d0cdd4a12ab04b",
+      "updated_at": 1492470866590
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1491638598570
+  "updated_at": 1492470866590
 }

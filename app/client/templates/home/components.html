@@ -3,6 +3,13 @@
   <span id="add_option" class="fui-plus-circle btn btn-success"></span>
 </template>
 
+<template name="datepicker">
+  <div class="input-group datetimepicker">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    <input id="datepicker" class="set-due-date form-control" placeholder="Date" type="text"/>
+  </div>
+</template>
+
 <template name="timelimit">
   <select id="hour_limit" class="form-control select select-primary time_limit_input" data-toggle="select">
     {{#each hours}}
@@ -28,17 +35,29 @@
           <h4 class="heading">{{this.poll.name}}</h4>
           <div class="description">
             <div class="col-xs-12 vote_front">
-              <p class="title_poll_front">Votes</p>
-              <p>{{get_votes}}</p>
+              {{#if this.poll.ready}}
+                <p class="title_poll_front" isready={{this.ready}} >This poll is ready</p>
+              {{else}}
+                <p class="title_poll_front" isready={{this.ready}}>This poll is not ready</p>
+              {{/if}}
             </div>
-            <a href="{{pathFor route='vote'}}" class="fui-export btn btn-info open_vote_btn"> Vote</a>
+            {{#if this.poll.isOwner }}
+              {{#if and this.poll.isactive}}
+                <a href="{{pathFor route='stop'}}" class="fui-export btn btn-info open_vote_btn"> Stop</a>
+              {{else}}
+                <a href="{{pathFor route='vote'}}" class="fui-export btn btn-info open_vote_btn"> Start</a>
+              {{/if}}
+            {{else}}
+              {{#if and this.poll.isactive}}
+                <a href="{{pathFor route='voted'}}" class="fui-export btn btn-info open_vote_btn"> Vote</a>
+              {{else}}
+                <button id="registerVoter" pollid={{this._id}}  class="fui-export btn btn-info open_vote_btn">Regsiter</button>
+              {{/if}}
+            {{/if}}
           </div>
         </div>
       </div>
     {{/each}}
-    <div class="col-xs-12">
-      <a href="{{pathFor route='polls'}}" class="btn btn-lg btn-info btn-block more_pollsbtn">More Polls</a>
-    </div>
   </div>
 
   {{else}}

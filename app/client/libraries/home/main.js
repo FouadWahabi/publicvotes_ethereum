@@ -1,6 +1,13 @@
 Session.set('NumberOfOptions', 2);
 Meteor.subscribe('poll_listings');
 
+Template.registerHelper('and',(a,b)=>{
+  return a && b;
+});
+Template.registerHelper('or',(a,b)=>{
+  return a || b;
+});
+
 Template.timelimit.helpers({
   hours: function(){
     return [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
@@ -12,11 +19,12 @@ Template.timelimit.helpers({
 
 Template.poll_listed.helpers({
   countpolls: function() {
-    return (poll.find({'poll.isvoted': false, 'poll.isactive':true}).count() > 0);
+    return (poll.find({'poll.isactive':false}).count() > 0);
   },
   six_polls: function() {
-    var all_polls = poll.find({'poll.ready':true, "poll.isactive":true, "poll.public":true}, {sort: {createdAt: -1}}).fetch();
+    var all_polls = poll.find({"poll.isactive":false}, {sort: {createdAt: -1}}).fetch();
     return all_polls.slice(0,6);
+
   },
   get_votes: function() {
     var cur_poll = this;
@@ -41,8 +49,35 @@ Template.poll_listed.helpers({
   }
 });
 
+Template.poll_listed.events({
+  'click #registerVoter': function(event) {
+    console .log('Register')
+    var current_poll = $(event.currentTarget).attr('pollid');
+    var isready = $(event.currentTarget).attr('isready')
+    console.log(isready)
+    Meteor.call('register_voter', getSessionToken(), current_poll, function(error, success) {
+      if(!error) {
+        if(isready) {
+          Router.go('voted')
+        } else {
+          new Confirmation({
+            message: "Thanks for registering ! check your inbox please to get you vote credentials",
+            title: "Confirmation",
+            okText: "Ok",
+            success: true,
+          }, function (ok) {
+
+          });
+        }
+      }
+    })
+  }
+})
+
+
 Template.more_options.events({
   'click #add_option' : function () {
+    console.log('Add option')
     //Update session storage for NumberOfOptions
     var numOptions = Session.get('NumberOfOptions') + 1;
 
@@ -78,11 +113,9 @@ Template.main.events({
       'name': '',
       'description': '',
       'options':'',
-      'public':'',
-      'vote_limit':false,
       'isactive':false,
-      'isvoted':false,
-      'ready':false
+      'ready':false,
+      'voter': []
     }
 
     poll['name']= $('#name_poll').val();
@@ -94,16 +127,16 @@ Template.main.events({
     }
 
     poll['options'] = option;
-    poll['public'] = $('#public_poll_switch').is(":checked");
+    // poll['public'] = $('#public_poll_switch').is(":checked");
     //poll['multi_option'] = $('#multi_option_switch').is(":checked");
-    poll['vote_limit'] = parseInt($('#vote_limit').val());
-    var hours = $('#hour_limit option:selected').text();
-    var days = $('#day_limit option:selected').text();
+    // poll['vote_limit'] = parseInt($('#vote_limit').val());
+    // var hours = $('#hour_limit option:selected').text();
+    // var days = $('#day_limit option:selected').text();
 
-    poll['limit_hours'] = parseInt(hours.match(/\d+/)[0]);
-    poll['limit_days'] = parseInt(days.match(/\d+/)[0]);
+    // poll['limit_hours'] = parseInt(hours.match(/\d+/)[0]);
+    // poll['limit_days'] = parseInt(days.match(/\d+/)[0]);
 
-    Meteor.call('post_data', poll, function(error, success) {
+    Meteor.call('post_data', getSessionToken(), poll, function(error, success) {
       Router.go('vote', {_id: success});
     });
   }

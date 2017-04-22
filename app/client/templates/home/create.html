@@ -61,57 +61,9 @@
                       <div class="col-md-6 public_settings">
                         <h5>Other Settings</h5>
 
-                        <!-- Public Poll: Yes or No -->
-                        <div class="row">
-                          <div class="col-xs-6">
-                            <p class="poll_settings">
-                              Public Poll
-                              <!-- More Information -->
-                              <button type="button" class="btn btn-xs btn-primary help pull-right" style="margin:5px 0; border-radius: 36px;" data-toggle="popover" data-placement="top" data-content="Since we are using the Blockchain for the Polls, all information is public. If you choose private, the listing will not be published on the homepage and only those with a link can vote.">?</button>
-                            </p>
-                          </div>
-                          <div class="col-xs-3">
-                            <span class="bootstrap-switch-square">
-                              <input type="checkbox" checked data-toggle="switch" id="public_poll_switch" data-on-text="<span class='fui-check'></span>" data-off-text="<span class='fui-cross'></span>" />
-                            </span>
-                          </div>
-                        </div>
-
-                        <!-- Multi-Option Poll: Yes or No
-                        <div class="row">
-                          <div class="col-xs-6">
-                            <p class="poll_settings">
-                              Multi-Option
-                              <button type="button" class="btn btn-xs btn-primary help pull-right" style="margin:5px 0; border-radius: 36px;" data-toggle="popover" data-placement="top" data-content="If you choose this option, your users will be able to pick multiple options instead of just one.">?</button>
-                            </p>
-                          </div>
-                          <div class="col-xs-3">
-                            <span class="bootstrap-switch-square">
-                              <input type="checkbox" checked data-toggle="switch" id="multi_option_switch" data-on-text="<span class='fui-check'></span>" data-off-text="<span class='fui-cross'></span>" />
-                            </span>
-                          </div>
-                        </div>-->
-
-                        <!-- Vote Limit: Number -->
-                        <div class="row">
-                          <div class="col-xs-6">
-                            <p class="poll_settings">Vote Limit</p>
-                          </div>
-                          <div class="col-xs-3">
-                            <span class="bootstrap-switch-square">
-                              <input id='vote_limit' type="text"  value="0" maxlength="5" class="form-control vote_limit_input" />
-                            </span>
-                          </div>
-                        </div>
-
                         <!-- Time Limit: Number -->
                         <div class="row">
-                          <div class="col-xs-6">
-                            <p class="poll_settings">Time Limit</p>
-                          </div>
-                          <div class="col-xs-3">
-                            {{> timelimit}}
-                          </div>
+                          {{> datepicker}}
                         </div>
                       </div>
                     </li>
