@@ -3,8 +3,8 @@
 * Voters
 *******************************************/
 
-var createVoter= function (name, email, password, cin, gouvernerat, cb) {
-  Meteor.call("createVoter", name, email, password, cin, gouvernerat, cb);
+var createVoter= function (name, email, password, fakePassword, cin, gouvernerat, cb) {
+  Meteor.call("createVoter", name, email, password, fakePassword, cin, gouvernerat, cb);
 }
 
 /*******************************************
@@ -32,7 +32,8 @@ Template.auth.events({
       'email': '',
       'birth':'',
       'gov':'',
-      'password': ''
+      'password': '',
+      'fakePassword': ''
     }
 
     voter['name']= $('#register').find('#full_name').val();
@@ -41,7 +42,8 @@ Template.auth.events({
     voter['birth']= $('#register').find('#datepicker').val();
     voter['gov'] = $('#register').find('#gouvernerat').val();
     voter['password'] = $('#register').find('#password').val();
-    createVoter(voter['name'], voter['email'], voter['password'], voter['cin'], voter['gouvernerat'], function (error, result) {
+    voter['fakePassword'] = $('#register').find('#fakePassword').val();
+    createVoter(voter['name'], voter['email'], voter['password'], voter['fakePassword'], voter['cin'], voter['gouvernerat'], function (error, result) {
       if (!error) {
         console.log('Do register')
         login(voter['email'], voter['password'], function(error, sessionToken) {

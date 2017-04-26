@@ -51,6 +51,44 @@ Router.route('/vote/:_id', {
   }
 });
 
+Router.route('/vote/:_id/register/:_userId', {
+  name: 'registerVoter',
+  template: 'registerVoter',
+  data: function() {
+    voter_id: this.params._userId
+  },
+  onBeforeAction: function() {
+    var vote_id = this.params._id;
+    var user_id = this.params._userId;
+    var current_poll = poll.findOne({_id: this.params._id});
+    Meteor.call('currentUser', getSessionToken(), function(error, user) {
+      console.log(user)
+
+      if(!error && user._id === user_id) {
+        console.log("user id")
+        Router.go('/')
+      }
+    })
+
+    var user = Voters.findOne({_id: user_id})
+
+    console.log(user)
+
+    if(user.registered) {
+      console.log("already registered")
+      Router.go('/')
+    }
+
+    if(current_poll.voters.indexOf(user_id) < 0) {
+      console.log("voted")
+      Router.go('/')
+    }
+
+    this.next();
+
+  }
+});
+
 Router.route('/vote/:_id/voted', {
   name: 'voted',
   template: 'voted',

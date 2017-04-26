@@ -23,6 +23,22 @@ getSessionToken = function () {
 	return Session.get("token");
 };
 
+getUserBySession = function (sessionToken) {
+	var user, session;
+	hash = CryptoJS.SHA256(sessionToken).toString();
+	session = VoterSessions.findOne({hash: hash})
+	console.log("session : " + session.user_id)
+	if (session) {
+		user = Voters.findOne({_id: session.user_id});
+		console.log("User : " + user.name)
+		if (user) {
+			return user;
+		}
+	} else {
+		return false
+	}
+};
+
 /**
 * jQuery Cookie plugin
 *

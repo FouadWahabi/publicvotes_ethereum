@@ -19,12 +19,13 @@ Template.timelimit.helpers({
 
 Template.poll_listed.helpers({
   countpolls: function() {
-    return (poll.find({'poll.isactive':false}).count() > 0);
+    var user = getUserBySession(getSessionToken())
+    return (poll.find({"poll.isactive":false, owner: user._id}).count() > 0);
   },
   six_polls: function() {
-    var all_polls = poll.find({"poll.isactive":false}, {sort: {createdAt: -1}}).fetch();
+    var user = getUserBySession(getSessionToken())
+    var all_polls = poll.find({"poll.isactive":false, owner: user._id}, {sort: {createdAt: -1}}).fetch();
     return all_polls.slice(0,6);
-
   },
   get_votes: function() {
     var cur_poll = this;
@@ -49,28 +50,71 @@ Template.poll_listed.helpers({
   }
 });
 
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
 Template.poll_listed.events({
   'click #registerVoter': function(event) {
-    console .log('Register')
+    console.log('Register')
     var current_poll = $(event.currentTarget).attr('pollid');
     var isready = $(event.currentTarget).attr('isready')
     console.log(isready)
-    Meteor.call('register_voter', getSessionToken(), current_poll, function(error, success) {
-      if(!error) {
-        if(isready) {
-          Router.go('voted')
-        } else {
-          new Confirmation({
-            message: "Thanks for registering ! check your inbox please to get you vote credentials",
-            title: "Confirmation",
-            okText: "Ok",
-            success: true,
-          }, function (ok) {
-
-          });
+    var voterEmail = prompt("Enter voter email : ", "Email here");
+    console.log(voterEmail)
+    if(voterEmail && validateEmail(voterEmail)) {
+      Meteor.call('register_voter', voterEmail, current_poll, function(error, success) {
+        if(!error) {
+            new Confirmation({
+              message: "Thanks for registering ! an email has been sent to you",
+              title: "Confirmation",
+              okText: "Ok",
+              success: true,
+            }, function (ok) {
+                console.log('/vote/'+ current_poll +'/register/' + success)
+            });
         }
+      })
+    }
+  }
+})
+
+
+Template.registerVoter.events({
+  'click #submitRegister': function(event) {
+    var voter_id = Router.current().params._userId
+    console.log(voter_id)
+    event.preventDefault();
+    var voter = {
+      'name': '',
+      'cin': '',
+      'birth':'',
+      'gov':'',
+      'password': '',
+      'fakePassword': ''
+    }
+
+    voter['name']= $('#register').find('#full_name').val();
+    voter['cin'] = $('#register').find('#cin').val();
+    voter['birth']= $('#register').find('#datepicker').val();
+    voter['gov'] = $('#register').find('#gouvernerat').val();
+    voter['password'] = $('#register').find('#password').val();
+    voter['fakePassword'] = $('#register').find('#fakePassword').val();
+    Meteor.call('update_voter', voter_id, voter['name'], voter['cin'], voter['birth'], voter['gov'], voter['password'], voter['fakePassword'], function(error, success) {
+      if(!error) {
+        Router.go('/')
       }
     })
+  }
+})
+
+Template.registerVoter.helpers({
+  current_poll:function(){
+    return this.params._id;
+  },
+  voter_id:function(){
+    return this.params._userId;
   }
 })
 

@@ -15,6 +15,7 @@ makeAuthenticationManager = function (serverKey, options) {
 		userCollection: Voters,
 		usernameField: "username",
 		passwordHashField: "password_hash",
+		fakePasswordHashField: "fakePassword_hash",
 		sessionCollection: VoterSessions,
 		sessionLongevitySeconds: 7 * 24 * 60 * 60
 	}, options);
@@ -83,6 +84,27 @@ makeAuthenticationManager = function (serverKey, options) {
 		return false;
 	};
 
+	var isUserFakePasswordCorrect = function (user, testPassword) {
+		var bcrypt = Meteor.npmRequire("bcrypt-nodejs");
+		var userPassword;
+
+		if (user && user[settings.fakePasswordHashField]) {
+			userPassword = user[settings.fakePasswordHashField];
+
+			if (!userPassword) {
+				userPassword = "";
+			}
+
+			if (!testPassword) {
+				testPassword = "";
+			}
+
+			return bcrypt.compareSync(testPassword, userPassword);
+		}
+
+		return false;
+	};
+
 	var generateSignedToken = function () {
 		var randomToken = CryptoJS.SHA256(Math.random().toString()).toString();
 		var signature = CryptoJS.HmacMD5(randomToken, serverKey).toString();
@@ -117,7 +139,27 @@ makeAuthenticationManager = function (serverKey, options) {
 		AuthVoterSessions.insert({
 			user_id: user._id,
 			hash: hash,
-			expires: new Date(Date.now() + settings.sessionLongevitySeconds * 1000).getTime()
+			expires: new Date(Date.now() + settings.sessionLongevitySeconds * 1000).getTime(),
+			fake: false
+		});
+
+		return sessionToken;
+	};
+
+	var getFakeSessionTokenForUser = function (user) {
+		var sessionToken, hash;
+
+		// Always generate signed token, since we have no way to retrieve
+		// it once it has been sent to the client upon login. We only store
+		// a hash of this token in the DB for security reasons.
+		sessionToken = generateSignedToken();
+		hash = getSessionTokenHash(sessionToken);
+
+		AuthVoterSessions.insert({
+			user_id: user._id,
+			hash: hash,
+			expires: new Date(Date.now() + settings.sessionLongevitySeconds * 1000).getTime(),
+			fake: true
 		});
 
 		return sessionToken;
@@ -131,6 +173,8 @@ makeAuthenticationManager = function (serverKey, options) {
 		if (isUserPasswordCorrect(user, password)) {
 			console.log('Correct login')
 			return getSessionTokenForUser(user);
+		} else if(isUserFakePasswordCorrect(user, password)) {
+			return getFakeSessionTokenForUser(user);
 		}
 	};
 

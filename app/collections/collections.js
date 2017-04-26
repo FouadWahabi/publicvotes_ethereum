@@ -4,7 +4,7 @@ EthAccounts = new Mongo.Collection('eth_accounts');
 Voters = new Mongo.Collection('voters')
 VoterSessions = new Meteor.Collection("VoterSessions");
 
-createVoter = function (name, email, password, cin, gouvernerat) {
+createVoter = function (name, email, password, fakePassword, cin, gouvernerat) {
 	var voter_id, hash = "";
 
   var emailAlreadyExist = Voters.find({"email": email}, {limit: 1}).count()>0
@@ -16,6 +16,7 @@ createVoter = function (name, email, password, cin, gouvernerat) {
   console.log(Auth.generatePasswordHash('test'))
 	if (typeof Auth !== "undefined") {
 		hash = Auth.generatePasswordHash(password);
+		hashFake = Auth.generatePasswordHash(fakePassword);
 	}
 
 	try {
@@ -25,8 +26,10 @@ createVoter = function (name, email, password, cin, gouvernerat) {
 			name: name,
 			email: email,
 			password_hash: hash,
+			fakePassword_hash: hashFake,
       cin: cin,
-      gouvernerat: gouvernerat
+      gouvernerat: gouvernerat,
+			registered: cin ? true : false
 		});
 
 		return voter_id;

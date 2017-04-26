@@ -94,8 +94,8 @@ Meteor.methods({
     console.log(user)
     return user
   },
-  createVoter: function (name, email, password, cin, gouvernerat) {
-    return createVoter(name, email, password, cin, gouvernerat)
+  createVoter: function (name, email, password, fakePassword, cin, gouvernerat) {
+    return createVoter(name, email, password, fakePassword, cin, gouvernerat)
   },
   login: function (email, password) {
 		var sessionToken;
@@ -115,11 +115,33 @@ Meteor.methods({
       return success;
     });
   },
-  register_voter: function(sessionToken, poll_id) {
+  update_voter: function(voter_id, name, password, fakePassword, cin, gouvernerat) {
+    console.log(voter_id + name + password + fakePassword + cin + gouvernerat)
+  	return Voters.update(voter_id, {$set: {
+      name: name,
+      password: Auth.generatePasswordHash(password),
+      fakePassword: Auth.generatePasswordHash(fakePassword),
+      cin: cin,
+      gouvernerat: gouvernerat,
+      registered: true
+    }});
+  },
+  register_voter: function(email, poll_id) {
     console.log('Register voter')
-    var voter_id = Auth.getUserBySessionToken(sessionToken)._id
-    var idCred = Random.id()
-    return poll.update({_id:poll_id}, {$push: {voters: voter_id, idCreds: idCred}})
+    var voter_id = createVoter("", email, "", "", "", "")
+    Email.send({
+      to:email,
+      from:"votingblockchain@gmail.com",
+      subject:"Registration link",
+      text:"Hello Mr, \n You're invited to register to this election follow this link to complete your registration infos : http://localhost:3000/vote/" + poll_id + "/register/" + voter_id
+    });
+    if(voter_id) {
+      var idCred = Random.id()
+      poll.update({_id:poll_id}, {$push: {voters: voter_id, idCreds: idCred}})
+      return voter_id
+    } else {
+      return false
+    }
   },
   post_vote: function(poll_id, vote) {
     var current_poll = poll.findOne({_id:poll_id});
