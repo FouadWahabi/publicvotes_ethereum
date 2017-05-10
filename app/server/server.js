@@ -106,7 +106,7 @@ Meteor.methods({
       throw new Meteor.Error(401, "Invalid email and password combination.");
     }
 
-    return sessionToken;
+    return CryptoJS.SHA256(sessionToken).toString();
 	},
   post_data: function(sessionToken, data) {
     var owner = Auth.getUserBySessionToken(sessionToken)._id

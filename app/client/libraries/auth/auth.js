@@ -48,6 +48,7 @@ Template.auth.events({
         console.log('Do register')
         login(voter['email'], voter['password'], function(error, sessionToken) {
           if(!error) {
+            console.log('Session token : ' + sessionToken);
             rememberSessionToken(sessionToken);
             Router.go('/')
           }

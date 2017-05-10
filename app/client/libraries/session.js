@@ -25,7 +25,7 @@ getSessionToken = function () {
 
 getUserBySession = function (sessionToken) {
 	var user, session;
-	hash = CryptoJS.SHA256(sessionToken).toString();
+	hash = sessionToken;
 	session = VoterSessions.findOne({hash: hash})
 	console.log("session : " + session.user_id)
 	if (session) {
