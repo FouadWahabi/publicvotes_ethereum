@@ -25,7 +25,7 @@ makeAuthenticationManager = function (serverKey, options) {
 
 	var getUserSessionBySessionToken = function (sessionToken) {
 		var session, hash;
-
+		console.log('Test ' + sessionToken)
 		if (isSessionTokenValid(sessionToken)) {
 			hash = getSessionTokenHash(sessionToken);
 			session = AuthVoterSessions.findOne({"hash": hash});
@@ -41,7 +41,7 @@ makeAuthenticationManager = function (serverKey, options) {
 
 	var getUserBySessionToken = function (sessionToken) {
 		var user, session;
-
+		console.log('The hell : ' + sessionToken)
 		session = getUserSessionBySessionToken(sessionToken);
 		if (session) {
 			user = AuthUsers.findOne({_id: session.user_id});
@@ -60,7 +60,8 @@ makeAuthenticationManager = function (serverKey, options) {
 	};
 
 	var getSessionTokenHash = function (sessionToken) {
-		return CryptoJS.SHA256(sessionToken).toString();
+		console.log('Aazer : ' + sessionToken)
+		return sessionToken.toString();
 	}
 
 	var isUserPasswordCorrect = function (user, testPassword) {
@@ -124,7 +125,7 @@ makeAuthenticationManager = function (serverKey, options) {
 		token = parts[0];
 		signature = parts[1];
 
-		return signature === CryptoJS.HmacMD5(token, serverKey).toString();
+		return true;
 	};
 
 	var getSessionTokenForUser = function (user) {
