@@ -1,7 +1,6 @@
 <template name="vote">
   <div class="vote_page">
     {{> vote_header}}
-    {{#if poll.isactive}}
       <div class="vote_content">
         <h6 class="vote_small">Vote</h6>
         {{#if option_count poll.options.length}}
@@ -20,14 +19,12 @@
         {{else}}
           <div class="multi_options row">
           {{#each poll.options}}
-            <button pollid="{{../_id}}" id="{{this}}" class="btn multi_option option_click"><h3 id="{{this}}">{{this}}</h3></button>
+            <button pollid="{{../_id}}" id="{{this}}" class="btn multi_option option_click row" style="width=100%"><h3 id="{{this}}">{{this}}</h3></button>
           {{/each}}
           </div>
         {{/if}}
       </div>
-    {{else}}
-      {{> not_ready}}
-    {{/if}}
+
   </div>
 </template>
 
@@ -53,11 +50,11 @@
 
 <template name="not_ready">
   <div class="vote_notready demo-3">
-    <h3>Your Poll is not live yet!</h3>
+    <h3>The Election is not live yet!</h3>
     <div class="row">
       <div class="col-xs-6 vote_why">
         <h6>Why?</h6>
-        <p>Evote utilizes the Ethereum Blockchain to create an online voting system. This means that thousands of computers around the world are there to verify your poll. For this work these computers need to be compensated. Which is why you need to send a small amount of Ether to this network.</p>
+        <p>Evote utilizes the Ethereum Blockchain to create an online voting system. This means that thousands of computers around the world are there to verify your election. For this work these computers need to be compensated. Which is why you need to send a small amount of Ether to this network.</p>
       </div>
       <div class="col-xs-6 vote_send">
         {{#if poll.ready}}

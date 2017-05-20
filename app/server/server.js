@@ -91,7 +91,6 @@ Meteor.methods({
   currentUser: function(sessionToken) {
     console.log(sessionToken)
     var user = Auth.getUserBySessionToken(sessionToken)
-    console.log(user)
     return user
   },
   createVoter: function (name, email, password, fakePassword, cin, gouvernerat) {

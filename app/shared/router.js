@@ -42,6 +42,11 @@ Router.route('/vote/:_id', {
     var vote_id = this.params._id;
     var current_poll = poll.findOne({_id: this.params._id});
     Meteor.call('currentUser', getSessionToken(), function(error, user) {
+      if(error) {
+        console.log(error)
+      } else {
+        console.log(user)
+      }
       if(!error && user._id !== current_poll.owner) {
         Router.go('/')
       }

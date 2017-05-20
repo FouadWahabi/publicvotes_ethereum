@@ -105,9 +105,9 @@
           <div class="description">
             <div class="col-xs-12 vote_front">
               {{#if this.poll.ready}}
-                <p class="title_poll_front" isready={{this.ready}} >This poll is ready</p>
+                <p class="title_poll_front" isready={{this.ready}} >This election is ready</p>
               {{else}}
-                <p class="title_poll_front" isready={{this.ready}}>This poll is not ready</p>
+                <p class="title_poll_front" isready={{this.ready}}>This election is not ready</p>
               {{/if}}
             </div>
             {{#if this.poll.isOwner }}
@@ -120,7 +120,7 @@
               {{#if and this.poll.isactive}}
                 <a href="{{pathFor route='voted'}}" class="fui-export btn btn-info open_vote_btn"> Vote</a>
               {{else}}
-                <button id="registerVoter" pollid={{this._id}}  class="fui-export btn btn-info open_vote_btn">Regsiter</button>
+                <button id="registerVoter" pollid={{this._id}}  class="fui-export btn btn-info open_vote_btn">Add voter</button>
               {{/if}}
             {{/if}}
           </div>
