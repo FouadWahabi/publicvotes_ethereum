@@ -17,6 +17,10 @@ Template.timelimit.helpers({
   }
 });
 
+Template.datepicker.rendered=function() {
+	$('#datepicker').datepicker();
+}
+
 Template.poll_listed.helpers({
   countpolls: function() {
     var user = getUserBySession(getSessionToken())
@@ -171,14 +175,8 @@ Template.main.events({
     }
 
     poll['options'] = option;
-    // poll['public'] = $('#public_poll_switch').is(":checked");
-    //poll['multi_option'] = $('#multi_option_switch').is(":checked");
-    // poll['vote_limit'] = parseInt($('#vote_limit').val());
-    // var hours = $('#hour_limit option:selected').text();
-    // var days = $('#day_limit option:selected').text();
 
-    // poll['limit_hours'] = parseInt(hours.match(/\d+/)[0]);
-    // poll['limit_days'] = parseInt(days.match(/\d+/)[0]);
+    poll['deadline'] = Date.parse($('#datepicker').val());
 
     Meteor.call('post_data', getSessionToken(), poll, function(error, success) {
       Router.go('vote', {_id: success});

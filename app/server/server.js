@@ -128,6 +128,7 @@ Meteor.methods({
   register_voter: function(email, poll_id) {
     console.log('Register voter')
     var voter_id = createVoter("", email, "", "", "", "")
+    console.log('Voter id : ' + voter_id)
     Email.send({
       to:email,
       from:"votingblockchain@gmail.com",
@@ -136,7 +137,24 @@ Meteor.methods({
     });
     if(voter_id) {
       var idCred = Random.id()
-      poll.update({_id:poll_id}, {$push: {voters: voter_id, idCreds: idCred}})
+      var current_poll = poll.findOne({_id:poll_id})
+      console.log("Poll id: " + current_poll._id)
+      var registeredVoters = current_poll.voters ? current_poll.voters : []
+      registeredVoters.push(voter_id)
+      var idCreds = current_poll.idCreds ? current_poll.idCreds : []
+      idCreds.push(idCred)
+      var shuffle = function shuffle(a) {
+          var j, x, i;
+          for (i = a.length; i; i--) {
+              j = Math.floor(Math.random() * i);
+              x = a[i - 1];
+              a[i - 1] = a[j];
+              a[j] = x;
+          }
+      }
+      shuffle(registeredVoters)
+      shuffle(idCreds)
+      poll.update({_id:poll_id}, {$set: {voters: registeredVoters, idCreds: idCreds}})
       return voter_id
     } else {
       return false
