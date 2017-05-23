@@ -43,11 +43,17 @@ makeAuthenticationManager = function (serverKey, options) {
 		var user, session;
 		console.log('The hell : ' + sessionToken)
 		session = getUserSessionBySessionToken(sessionToken);
+		console.log('I got the sessions : ' + session.user_id)
 		if (session) {
 			user = AuthUsers.findOne({_id: session.user_id});
 			if (user) {
+				console.log('I got the user : ' + user._id)
 				return user;
+			} else {
+				return false;
 			}
+		} else {
+			return false;
 		}
 	};
 
@@ -109,7 +115,7 @@ makeAuthenticationManager = function (serverKey, options) {
 	var generateSignedToken = function () {
 		var randomToken = CryptoJS.SHA256(Math.random().toString()).toString();
 		var signature = CryptoJS.HmacMD5(randomToken, serverKey).toString();
-		var signedToken = randomToken + ":" + signature;
+		var signedToken = randomToken;
 
 		return signedToken;
 	};
@@ -120,10 +126,6 @@ makeAuthenticationManager = function (serverKey, options) {
 		if (!sessionToken) {
 			return false;
 		}
-
-		parts = sessionToken.toString().split(":");
-		token = parts[0];
-		signature = parts[1];
 
 		return true;
 	};
@@ -136,7 +138,7 @@ makeAuthenticationManager = function (serverKey, options) {
 		// a hash of this token in the DB for security reasons.
 		sessionToken = generateSignedToken();
 		hash = getSessionTokenHash(sessionToken);
-
+		console.log('Creating session with the hash : ' + hash)
 		AuthVoterSessions.insert({
 			user_id: user._id,
 			hash: hash,

@@ -1,6 +1,7 @@
 <template name="vote">
   <div class="vote_page">
-    {{> vote_header}}
+    {{> vote_header }}
+    {{#if poll.isactive}}
       <div class="vote_content">
         <h6 class="vote_small">Vote</h6>
         {{#if option_count poll.options.length}}
@@ -24,7 +25,9 @@
           </div>
         {{/if}}
       </div>
-
+      {{else}}
+        {{> not_ready}}
+      {{/if}}
   </div>
 </template>
 
