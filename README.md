@@ -16,7 +16,7 @@ This project is implemented using `javascript` programming language, using the [
 
 ## Contributing
 
-Thanks for thinking in contributing to this system. Please email me with any suggestions: [Dear Fouad,](mailto:fouad.wahabi@gmail.com)
+Thanks for thinking in contributing to this project. Please email me with any suggestions: [Dear Fouad,](mailto:fouad.wahabi@gmail.com)
 
 
 ## Authors
